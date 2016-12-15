@@ -1,9 +1,8 @@
-'use strict'
-
-const express = require('express')
-const bodyParser = require('body-parser')
-const request = require('request')
-const app = express()
+var express = require('express')
+var bodyParser = require('body-parser')
+var request = require('request')
+var http = require('http')
+var app = express()
 
 app.set('port', (process.env.PORT || 5000))
 
@@ -28,12 +27,12 @@ app.get('/webhook/', function (req, res) {
 
 // to post data
 app.post('/webhook/', function (req, res) {
-	let messaging_events = req.body.entry[0].messaging
-	for (let i = 0; i < messaging_events.length; i++) {
-		let event = req.body.entry[0].messaging[i]
-		let sender = event.sender.id
+	 var messaging_events = req.body.entry[0].messaging
+	for (var i = 0; i < messaging_events.length; i++) {
+		var event = req.body.entry[0].messaging[i]
+		var sender = event.sender.id
 		if (event.message && event.message.text) {
-			let text = event.message.text
+			var text = event.message.text
 			if (text === 'Generic') {
 				sendGenericMessage(sender)
 				continue
@@ -41,7 +40,7 @@ app.post('/webhook/', function (req, res) {
 			sendTextMessage(sender, "Text received, echo: " + text.substring(0, 200))
 		}
 		if (event.postback) {
-			let text = JSON.stringify(event.postback)
+			var text = JSON.stringify(event.postback)
 			sendTextMessage(sender, "Postback received: "+text.substring(0, 200), token)
 			continue
 		}
@@ -51,11 +50,11 @@ app.post('/webhook/', function (req, res) {
 
 
 // recommended to inject access tokens as environmental variables, e.g.
-// const token = process.env.PAGE_ACCESS_TOKEN
-const token = "EAAFCmaQoR2IBACjahU8XZC0epp0fv5RFGZBZAZBXQhdO8CweUmZANPmYTpaUJBRr7RAqe68e8iEAGUjlrTc4v7ZBhQSprZAueEZC6fIJ8ZAG0P7pOZB45iP6Esydi515L42TVpegIWHiCEBIUmTTzjSZAkKSQlH61vZA6CL7MOTJKh0dZCgZDZD"
+// var token = process.env.PAGE_ACCESS_TOKEN
+var token = "EAAFCmaQoR2IBACjahU8XZC0epp0fv5RFGZBZAZBXQhdO8CweUmZANPmYTpaUJBRr7RAqe68e8iEAGUjlrTc4v7ZBhQSprZAueEZC6fIJ8ZAG0P7pOZB45iP6Esydi515L42TVpegIWHiCEBIUmTTzjSZAkKSQlH61vZA6CL7MOTJKh0dZCgZDZD"
 
 function sendTextMessage(sender, text) {
-	let messageData = { text:text }
+	var messageData = { text:text }
 	
 	request({
 		url: 'https://graph.facebook.com/v2.6/me/messages',
@@ -101,7 +100,7 @@ function sendGenericMessage(sender) {
 							}],
 						});
 		}
-				let messageData = {
+				var  messageData = {
 				"attachment": {
 					"type": "template",
 					"payload": {
@@ -130,6 +129,6 @@ function sendGenericMessage(sender) {
 }
 
 // spin spin sugar
-app.listen(app.get('port'), function() {
-	console.log('running on port', app.get('port'))
-})
+http.createServer(app).listen(app.get('port'), function(){
+ console.log("Express server listening on port " + app.get('port'));
+});
