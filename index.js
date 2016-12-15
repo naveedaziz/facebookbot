@@ -44,8 +44,7 @@ app.post('/webhook/', function (req, res) {
 			var text = JSON.stringify(event.postback);
 			console.log(text);
 			var collectionUrl = text.payload;
-			var productTitle = text.title;
-			if(productTitle.indexOf("PKR") >= 0){
+			if(collectionUrl.indexOf("PKR") >= 0){
 				sendTextMessage(sender, "Postback received: "+text.substring(0, 200), token)
 			    continue
 			}else{
@@ -167,7 +166,7 @@ function sendGenericMessageProduct(sender,ids) {
 										"buttons": [{
 											"type": "postback",
 											"title": body[bd].productName +"(PKR "+body[bd].productPrice+")",
-											"payload": body[bd].id
+											"payload": body[bd].productName +"(PKR "+body[bd].productPrice+")"
 										}],
 									});
 					}
