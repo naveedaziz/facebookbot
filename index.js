@@ -42,14 +42,14 @@ app.post('/webhook/', function (req, res) {
 		if (event.postback) {
 			var urlMaps  = event.postback;
 			var text = JSON.stringify(event.postback);			
-			var collectionUrl = urlMaps.payload.collection;
+			var collectionUrl = urlMaps.payload.split(':');
 			console.log('=========Nidodba==========');
 			console.log(collectionUrl);
-			if(collectionUrl && collectionUrl.indexOf("PKR") >= 0){
+			if(collectionUrl[0] == 'product'){
 				sendTextMessage(sender, "Postback received: "+text.substring(0, 200), token)
 			    continue
-			}else{
-				sendGenericMessageProduct(sender,collectionUrl)
+			}else if(collectionUrl[0] == 'collection'){
+				sendGenericMessageProduct(sender,collectionUrl[1])
 				continue
 			}
 			
@@ -102,7 +102,7 @@ function sendGenericMessage(sender) {
 										"buttons": [{
 											"type": "postback",
 											"title": body[bd].collectionName,
-											"payload": "{collection:"+body[bd].id+"}",
+											"payload": "collection:"+body[bd].id,
 										}],
 									});
 					}
@@ -166,7 +166,7 @@ function sendGenericMessageProduct(sender,ids) {
 										"buttons": [{
 											"type": "postback",
 											"title": body[bd].productName,
-											"payload": "{product:"+body[bd].id+"}"
+											"payload": "product:"+body[bd].id
 										}],
 									});
 					}
