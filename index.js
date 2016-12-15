@@ -27,7 +27,6 @@ app.get('/webhook/', function (req, res) {
 
 // to post data
 app.post('/webhook/', function (req, res) {
-	console.log('Nidobda')
 	 var messaging_events = req.body.entry[0].messaging
 	for (var i = 0; i < messaging_events.length; i++) {
 		var event = req.body.entry[0].messaging[i]
@@ -88,7 +87,6 @@ function sendGenericMessage(sender) {
 		method: 'GET'
 	}, function(error, response, body) {
 		if(body){
-			console.log('Data');
 			if(typeof(body) != 'object'){
 				body = JSON.parse(body);
 			}
@@ -107,7 +105,6 @@ function sendGenericMessage(sender) {
 									});
 					}
 			}
-			console.log(cols)
 			var messageData = {
 						"attachment": {
 							"type": "template",
@@ -147,7 +144,6 @@ function sendGenericMessageProduct(sender,ids) {
 		form: requested,
 	}, function(error, response, body) {
 		if(body){
-			console.log('Data');
 			if(typeof(body) != 'object'){
 				body = JSON.parse(body);
 			}
@@ -171,7 +167,7 @@ function sendGenericMessageProduct(sender,ids) {
 									});
 					}
 			}
-			console.log(cols)
+			
 			var messageData = {
 						"attachment": {
 							"type": "template",
