@@ -44,7 +44,8 @@ app.post('/webhook/', function (req, res) {
 			var text = JSON.stringify(event.postback);
 			console.log(text);
 			var collectionUrl = text.payload;
-			if(text.types){
+			var productTitle = text.title;
+			if(productTitle.indexOf("PKR") >= 0){
 				sendTextMessage(sender, "Postback received: "+text.substring(0, 200), token)
 			    continue
 			}else{
@@ -154,13 +155,18 @@ function sendGenericMessageProduct(sender,ids) {
 			var cols = [];
 			for(var bd in body){
 					if(body[bd] && body[bd].productName){
+						if(body[bd].productImage){
+							if(typeof(body[bd].productImage) != 'object'){
+								body[bd].productImage = JSON.parse(body[bd].productImage);
+							}
+						}
 						cols.push({
 										"title": body[bd].productName,
-										"subtitle": body[bd].productName,
-										"image_url": "http://messengerdemo.parseapp.com/img/rift.png",
+										"subtitle": "PKR: "+body[bd].productPrice,
+										"image_url": "https://az866755.vo.msecnd.net/product/"+body[bd].productImage[0].Image,
 										"buttons": [{
 											"type": "postback",
-											"title": body[bd].productName,
+											"title": body[bd].productName +"(PKR "+body[bd].productPrice+")",
 											"payload": body[bd].id
 										}],
 									});
