@@ -44,7 +44,7 @@ app.post('/webhook/', function (req, res) {
 			var text = JSON.stringify(event.postback);
 			console.log(text);
 			var collectionUrl = text.payload;
-			if(!text.types){
+			if(text.types){
 				sendTextMessage(sender, "Postback received: "+text.substring(0, 200), token)
 			    continue
 			}else{
