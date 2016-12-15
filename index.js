@@ -44,8 +44,14 @@ app.post('/webhook/', function (req, res) {
 			var text = JSON.stringify(event.postback);
 			console.log(text);
 			var collectionUrl = text.payload;
-			sendTextMessage(sender, "Postback received: "+text.substring(0, 200), token)
-			continue
+			if(!text.types){
+				sendTextMessage(sender, "Postback received: "+text.substring(0, 200), token)
+			    continue
+			}else{
+				sendGenericMessageProduct(sender,collectionUrl)
+				continue
+			}
+			
 		}
 	}
 	res.sendStatus(200)
@@ -79,16 +85,14 @@ function sendTextMessage(sender, text) {
 function sendGenericMessage(sender) {
 	request({
 		url: 'https://fishry-beta.azure-mobile.net/api/collection_request?store_id=619708C1-32D9-45CC-A9D7-51E23D5EB4FA',
-		method: 'GET',
+		method: 'GET'
 	}, function(error, response, body) {
 		if(body){
 			console.log('Data');
 			if(typeof(body) != 'object'){
 				body = JSON.parse(body);
 			}
-			var collections = body;
 			var cols = [];
-			console.log(body)
 			for(var bd in body){
 					if(body[bd] && body[bd].collectionName){
 						cols.push({
@@ -98,7 +102,67 @@ function sendGenericMessage(sender) {
 										"buttons": [{
 											"type": "postback",
 											"title": body[bd].collectionName,
-											"payload": body[bd].collectionName,
+											"payload": body[bd].id,
+										}],
+									});
+					}
+			}
+			console.log(cols)
+			var messageData = {
+						"attachment": {
+							"type": "template",
+							"payload": {
+								"template_type": "generic",
+								"elements": cols
+							}
+						}
+					}
+					request({
+						url: 'https://graph.facebook.com/v2.6/me/messages',
+						qs: {access_token:token},
+						method: 'POST',
+						json: {
+							recipient: {id:sender},
+							message: messageData,
+						}
+					}, function(error, response, body) {
+						if (error) {
+							console.log('Error sending messages: ', error)
+						} else if (response.body.error) {
+							console.log('Error: ', response.body.error)
+						}
+					})
+		}
+						
+	})
+	
+}
+function sendGenericMessageProduct(sender,ids) {
+	var requested = {};
+		requested.collection_id = [ids];
+		requested.storeID = '619708C1-32D9-45CC-A9D7-51E23D5EB4FA';
+	request({
+		url: 'https://fishry-beta.azure-mobile.net/api/collection_request',
+		method: 'POST',
+		form: requested,
+	}, function(error, response, body) {
+		if(body){
+			console.log('Data');
+			if(typeof(body) != 'object'){
+				body = JSON.parse(body);
+			}
+			var cols = [];
+			for(var bd in body){
+					if(body[bd] && body[bd].productName){
+						cols.push({
+										"title": body[bd].productName,
+										"subtitle": body[bd].productName,
+										"image_url": "http://messengerdemo.parseapp.com/img/rift.png",
+										"buttons": [{
+											"type": "postback",
+											"title": body[bd].productName,
+											"payload": body[bd].id,
+											"tyes":'product'
 										}],
 									});
 					}
