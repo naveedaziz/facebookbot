@@ -40,7 +40,7 @@ app.post('/webhook/', function (req, res) {
 			}
 			sendTextMessage(sender, "Text received, echo: " + text.substring(0, 200))
 		}
-		if (event.collectionCall) {
+		if (event.postback) {
 			var text = JSON.stringify(event.postback);
 			console.log(text);
 			var collectionUrl = text.payload;
@@ -96,7 +96,7 @@ function sendGenericMessage(sender) {
 										"subtitle": body[bd].collectionName,
 										"image_url": "http://messengerdemo.parseapp.com/img/rift.png",
 										"buttons": [{
-											"type": "collectionCall",
+											"type": "postback",
 											"title": body[bd].collectionName,
 											"payload": body[bd].collectionName,
 										}],
