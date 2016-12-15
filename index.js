@@ -41,9 +41,9 @@ app.post('/webhook/', function (req, res) {
 			sendTextMessage(sender, "Text received, echo: " + text.substring(0, 200))
 		}
 		if (event.postback) {
-			var text = JSON.stringify(event.postback);
-			console.log(text);
+			var text = JSON.stringify(event.postback);			
 			var collectionUrl = text.payload;
+			console.log(collectionUrl);
 			if(collectionUrl && collectionUrl.indexOf("PKR") >= 0){
 				sendTextMessage(sender, "Postback received: "+text.substring(0, 200), token)
 			    continue
