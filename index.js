@@ -43,6 +43,8 @@ app.post('/webhook/', function (req, res) {
 			var urlMaps  = event.postback;
 			var text = JSON.stringify(event.postback);			
 			var collectionUrl = urlMaps.payload;
+			console.log('=========Nidodba==========');
+			console.log(collectionUrl);
 			if(collectionUrl && collectionUrl.indexOf("PKR") >= 0){
 				sendTextMessage(sender, "Postback received: "+text.substring(0, 200), token)
 			    continue
@@ -163,8 +165,8 @@ function sendGenericMessageProduct(sender,ids) {
 										"image_url": "https://az866755.vo.msecnd.net/product/"+body[bd].productImage[0].Image,
 										"buttons": [{
 											"type": "postback",
-											"title": body[bd].productName +"(PKR "+body[bd].productPrice+")",
-											"payload": body[bd].productName +"(PKR "+body[bd].productPrice+")"
+											"title": body[bd].productName,
+											"payload": "{product:"+body[bd]+"}"
 										}],
 									});
 					}
