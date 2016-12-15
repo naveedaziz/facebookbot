@@ -74,11 +74,7 @@ function sendTextMessage(sender, text) {
 }
 
 function sendGenericMessage(sender) {
-	request({
-		url: 'http://fishry-beta.azure-mobile.net/api/collection_request?store_id=619708C1-32D9-45CC-A9D7-51E23D5EB4FA',
-		method: 'GET',
-	}, function(error, response, body) {
-	   	var messageData = {
+	var messageData = {
 		"attachment": {
 			"type": "template",
 			"payload": {
@@ -124,8 +120,6 @@ function sendGenericMessage(sender) {
 			console.log('Error: ', response.body.error)
 		}
 	})
-	   })
-	
 }
 
 // spin spin sugar
