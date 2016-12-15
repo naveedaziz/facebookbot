@@ -82,7 +82,7 @@ function sendGenericMessage(sender) {
 		if(typeof(body) != 'object'){
 			var datas = JSON.parse(body);
 		}else{
-			var datas = body);
+			var datas = body;
 		}
 		var collections  = [];
 		for(var dts in data){
