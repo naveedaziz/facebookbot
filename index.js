@@ -46,8 +46,8 @@ app.post('/webhook/', function (req, res) {
 			console.log('=========Nidodba==========');
 			console.log(collectionUrl);
 			if(collectionUrl[0] == 'product'){
-				sendTextMessage(sender, "Postback received: "+text.substring(0, 200), token)
-			    continue
+				sendGenericMessageProductDetail(sender,collectionUrl[1])
+				continue
 			}else if(collectionUrl[0] == 'collection'){
 				sendGenericMessageProduct(sender,collectionUrl[1])
 				continue
@@ -84,6 +84,7 @@ function sendTextMessage(sender, text) {
 }
 
 function sendGenericMessage(sender) {
+	
 	request({
 		url: 'https://fishry-beta.azure-mobile.net/api/collection_request?store_id=619708C1-32D9-45CC-A9D7-51E23D5EB4FA',
 		method: 'GET'
@@ -138,6 +139,7 @@ function sendGenericMessage(sender) {
 }
 function sendGenericMessageProduct(sender,ids) {
 	
+	
 	var requested = {};
 		requested.collection_id = [ids];
 		requested.storeID = '619708C1-32D9-45CC-A9D7-51E23D5EB4FA';
@@ -166,7 +168,7 @@ function sendGenericMessageProduct(sender,ids) {
 										"buttons": [{
 											"type": "postback",
 											"title": body[bd].productName,
-											"payload": "product:"+body[bd].id
+											"payload": "product:"+body[bd].productUrl
 										}],
 									});
 					}
@@ -181,6 +183,76 @@ function sendGenericMessageProduct(sender,ids) {
 							}
 						}
 					}
+					request({
+						url: 'https://graph.facebook.com/v2.6/me/messages',
+						qs: {access_token:token},
+						method: 'POST',
+						json: {
+							recipient: {id:sender},
+							message: messageData,
+						}
+					}, function(error, response, body) {
+						if (error) {
+							console.log('Error sending messages: ', error)
+						} else if (response.body.error) {
+							console.log('Error: ', response.body.error)
+						}
+					})
+		}
+						
+	})
+	
+}
+function sendGenericMessageProductDetail(sender,ids) {
+	var requested = {};
+		requested.product_url = ids;
+		requested.storeID = '619708C1-32D9-45CC-A9D7-51E23D5EB4FA';
+	console.log(requested);
+	request({
+		url: 'https://fishry-beta.azure-mobile.net/api/collection_request',
+		method: 'POST',
+		form: requested,
+	}, function(error, response, body) {
+		if(body){
+			if(typeof(body) != 'object'){
+				body = JSON.parse(body);
+			}
+			var cols = [];
+			/*for(var bd in body){
+					if(body[bd] && body[bd].productName){
+						if(body[bd].productImage){
+							if(typeof(body[bd].productImage) != 'object'){
+								body[bd].productImage = JSON.parse(body[bd].productImage);
+							}
+						}
+						cols.push({
+										"title": body[bd].productName,
+										"subtitle": "PKR: "+body[bd].productPrice,
+										"image_url": "https://az866755.vo.msecnd.net/product/"+body[bd].productImage[0].Image,
+										"buttons": [{
+											"type": "postback",
+											"title": body[bd].productName,
+											"payload": "product:"+body[bd].id
+										}],
+									});
+					}
+			}*/
+			
+			var messageData = {
+								"text":"Pick a color:",
+								"quick_replies":[
+								  {
+									"content_type":"text",
+									"title":"Red",
+									"payload":"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED"
+								  },
+								  {
+									"content_type":"text",
+									"title":"Green",
+									"payload":"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_GREEN"
+								  }
+								]
+							  }
 					request({
 						url: 'https://graph.facebook.com/v2.6/me/messages',
 						qs: {access_token:token},
