@@ -102,7 +102,7 @@ function sendGenericMessage(sender) {
 										"buttons": [{
 											"type": "postback",
 											"title": body[bd].collectionName,
-											"payload": {collection:body[bd].id},
+											"payload": "{collection:body[bd].id}",
 										}],
 									});
 					}
@@ -166,7 +166,7 @@ function sendGenericMessageProduct(sender,ids) {
 										"buttons": [{
 											"type": "postback",
 											"title": body[bd].productName,
-											"payload": {product:body[bd].id}
+											"payload": "{product:body[bd].id}"
 										}],
 									});
 					}
