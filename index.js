@@ -87,21 +87,23 @@ function sendGenericMessage(sender) {
 			var collections = body;
 			var cols = [];
 			for(var bd in body){
-				if(body[bd] && body[bd].collectionName){
-					cols.push({
-									"title": body[bd].collectionName,
-									"subtitle": body[bd].collectionName,
-									"image_url": "http://messengerdemo.parseapp.com/img/rift.png",
-									"buttons": [{
-										"type": "web_url",
-										"url": "https://www.messenger.com",
-										"title": "web url"
-									}, {
-										"type": "postback",
-										"title": "Postback",
-										"payload": body[bd].collectionName,
-									}],
-								});
+				if(bd < 4){
+					if(body[bd] && body[bd].collectionName){
+						cols.push({
+										"title": body[bd].collectionName,
+										"subtitle": body[bd].collectionName,
+										"image_url": "http://messengerdemo.parseapp.com/img/rift.png",
+										"buttons": [{
+											"type": "web_url",
+											"url": "https://www.messenger.com",
+											"title": "web url"
+										}, {
+											"type": "postback",
+											"title": "Postback",
+											"payload": body[bd].collectionName,
+										}],
+									});
+					}
 				}
 				
 			}
