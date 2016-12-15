@@ -107,6 +107,7 @@ function sendGenericMessage(sender) {
 				}
 				
 			}
+			console.log(cols)
 			var messageData = {
 						"attachment": {
 							"type": "template",
