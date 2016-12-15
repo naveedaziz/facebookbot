@@ -3,6 +3,24 @@ var bodyParser = require('body-parser')
 var request = require('request')
 var http = require('http')
 var app = express()
+var sqlite3 = require('sqlite3').verbose();
+var db = new sqlite3.Database(':memory:');
+ 
+db.serialize(function() {
+  db.run("CREATE TABLE lorem (info TEXT)");
+ 
+  var stmt = db.prepare("INSERT INTO lorem VALUES (?)");
+  for (var i = 0; i < 10; i++) {
+      stmt.run("Ipsum " + i);
+  }
+  stmt.finalize();
+ 
+  db.each("SELECT rowid AS id, info FROM lorem", function(err, row) {
+      console.log(row.id + ": " + row.info);
+  });
+});
+ 
+db.close();
 
 app.set('port', (process.env.PORT || 5000))
 
@@ -32,13 +50,20 @@ app.post('/webhook/', function (req, res) {
 		var event = req.body.entry[0].messaging[i]
 		var sender = event.sender.id
 		console.log(event)
-		if (event.message && event.message.text) {
-			var text = event.message.text
-			if (text === 'Generic') {
-				sendGenericMessage(sender)
+		if (event.postback) {
+			var urlMaps  = event.postback;
+			var text = JSON.stringify(event.postback);			
+			var collectionUrl = urlMaps.payload.split(':');
+			console.log('=========Nidodba==========');
+			console.log(collectionUrl);
+			if(collectionUrl[0] == 'product'){
+				sendGenericMessageProductDetail(sender,collectionUrl[1])
+				continue
+			}else if(collectionUrl[0] == 'collection'){
+				sendGenericMessageProduct(sender,collectionUrl[1])
 				continue
 			}
-			sendTextMessage(sender, "Text received, echo: " + text.substring(0, 200))
+			
 		}
 		if (event.postback) {
 			var urlMaps  = event.postback;
@@ -54,6 +79,14 @@ app.post('/webhook/', function (req, res) {
 				continue
 			}
 			
+		}
+		if (event.message && event.message.text) {
+			var text = event.message.text
+			if (text === 'Generic') {
+				sendGenericMessage(sender)
+				continue
+			}
+			sendTextMessage(sender, "Text received, echo: " + text.substring(0, 200))
 		}
 	}
 	res.sendStatus(200)
