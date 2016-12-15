@@ -42,7 +42,7 @@ app.post('/webhook/', function (req, res) {
 		if (event.postback) {
 			var urlMaps  = event.postback;
 			var text = JSON.stringify(event.postback);			
-			var collectionUrl = urlMaps.payload;
+			var collectionUrl = urlMaps.payload.collection;
 			console.log('=========Nidodba==========');
 			console.log(collectionUrl);
 			if(collectionUrl && collectionUrl.indexOf("PKR") >= 0){
