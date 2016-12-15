@@ -86,6 +86,7 @@ function sendGenericMessage(sender) {
 			}
 			var collections = body;
 			var cols = [];
+			console.log(body)
 			for(var bd in body){
 				if(bd < 4){
 					if(body[bd] && body[bd].collectionName){
