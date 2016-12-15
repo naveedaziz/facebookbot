@@ -135,10 +135,11 @@ function sendGenericMessage(sender) {
 	
 }
 function sendGenericMessageProduct(sender,ids) {
-	console.log(ids);
+	
 	var requested = {};
 		requested.collection_id = [ids];
 		requested.storeID = '619708C1-32D9-45CC-A9D7-51E23D5EB4FA';
+	console.log(requested);
 	request({
 		url: 'https://fishry-beta.azure-mobile.net/api/collection_request',
 		method: 'POST',
