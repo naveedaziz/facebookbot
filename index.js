@@ -161,8 +161,7 @@ function sendGenericMessageProduct(sender,ids) {
 										"buttons": [{
 											"type": "postback",
 											"title": body[bd].productName,
-											"payload": body[bd].id,
-											"tyes":'product'
+											"payload": body[bd].id
 										}],
 									});
 					}
