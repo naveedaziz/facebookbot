@@ -46,9 +46,13 @@ app.post('/webhook/', function (req, res) {
 		var event = req.body.entry[0].messaging[i]
 		var sender = event.sender.id
 		console.log(event)
-		db.each("SELECT  sender FROM users", function(err, row) {
-		  console.log(": " + row.sender);
-	  });
+		db.run("CREATE TABLE users (sender TEXT,recipient TEXT,cart TEXT,product_selected TEXT,store_id TEXT,dated TEXT)");
+ 
+		  var stmt = db.run("INSERT INTO users (sender, recipient, cart) VALUES ('1', '2', '3')");
+		 
+		  db.each("SELECT rowid AS id, sender FROM users", function(err, row) {
+			  console.log(row.id + ": " + row.sender);
+		  });
 		if (event.postback) {
 			var urlMaps  = event.postback;
 			var text = JSON.stringify(event.postback);			
