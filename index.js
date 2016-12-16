@@ -48,10 +48,12 @@ app.post('/webhook/', function (req, res) {
 			  dataPre = row.id;
 		  });
 		  if(!dataPre){
+			  console.log("INSERT INTO users (sender, recipient,store_id) VALUES ('"+event.sender.id+"', '"+event.recipient.id+"', '"+storeID+"')");
+			  console.log("SELECT rowid AS id, sender FROM users where sender = '"+event.sender.id+"' and  recipient = '"+event.recipient.id+"' and store_id = '"+storeID+"'");
 		  	 var stmt = db.run("INSERT INTO users (sender, recipient,store_id) VALUES ('"+event.sender.id+"', '"+event.recipient.id+"', '"+storeID+"')");
 			 db.each("SELECT rowid AS id, sender FROM users where sender = '"+event.sender.id+"' and  recipient = '"+event.recipient.id+"' and store_id = '"+storeID+"'", function(err, row) {
-			  dataPre = row.id;
-		  });
+				  dataPre = row.id;
+			 });
 		  }
 		  console.log("DB ID IS : "+dataPre);
 		})
