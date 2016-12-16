@@ -35,20 +35,26 @@ app.get('/webhook/', function (req, res) {
 
 // to post data
 app.post('/webhook/', function (req, res) {
+	var storeID = '619708C1-32D9-45CC-A9D7-51E23D5EB4FA'
 	 var messaging_events = req.body.entry[0].messaging
 	for (var i = 0; i < messaging_events.length; i++) {
 		var event = req.body.entry[0].messaging[i]
 		var sender = event.sender.id
 		console.log(event)
-		db.serialize(function() {
-		// db.run("CREATE TABLE users (sender TEXT,recipient TEXT,cart TEXT,product_selected TEXT,store_id TEXT,dated TEXT)");
- 
-		  var stmt = db.run("INSERT INTO users (sender, recipient, cart) VALUES ('1', '2', '3')");
+		db.serialize(function() { 
+		  var dataPre = false;
 		 
-		  db.each("SELECT rowid AS id, sender FROM users", function(err, row) {
-			  console.log(row.id + ": " + row.sender);
+		  db.each("SELECT rowid AS id, sender FROM users where sender = '"+event.sender.id+"' and  recipient = '"+event.recipient.id+"' and store_id = '"+storeID+"'", function(err, row) {
+			  dataPre = row.id;
 		  });
+		  if(!dataPre){
+		  	 var stmt = db.run("INSERT INTO users (sender, recipient,store_id) VALUES ('"+event.sender.id+"', '"+event.recipient.id+"', '"+storeID+"')");
+			 db.each("SELECT rowid AS id, sender FROM users where sender = '"+event.sender.id+"' and  recipient = '"+event.recipient.id+"' and store_id = '"+storeID+"'", function(err, row) {
+			  dataPre = row.id;
+		  });
+		  }
 		})
+		console.log("DB ID IS : "+dataPre);
 		if (event.postback) {
 			var urlMaps  = event.postback;
 			var text = JSON.stringify(event.postback);			
