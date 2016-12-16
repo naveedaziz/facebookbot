@@ -6,7 +6,7 @@ var app = express()
 var sqlite3 = require('sqlite3').verbose();
 var db = new sqlite3.Database(':memory:');
  
-db.serialize(function() {
+/*db.serialize(function() {
   db.run("CREATE TABLE users (sender TEXT,recipient TEXT,cart TEXT,product_selected TEXT,store_id TEXT,dated TEXT)");
  
   var stmt = db.run("INSERT INTO users (sender, recipient, cart) VALUES ('1', '2', '3')");
@@ -14,9 +14,9 @@ db.serialize(function() {
   db.each("SELECT rowid AS id, sender FROM users", function(err, row) {
       console.log(row.id + ": " + row.sender);
   });
-});
- 
-db.close();
+});*/
+/* 
+db.close();*/
 
 app.set('port', (process.env.PORT || 5000))
 
@@ -47,10 +47,7 @@ app.post('/webhook/', function (req, res) {
 		var sender = event.sender.id
 		console.log(event)
 		db.serialize(function() {
-		 db.run("CREATE TABLE users (sender TEXT,recipient TEXT,cart TEXT,product_selected TEXT,store_id TEXT,dated TEXT)");
- 
 		  var stmt = db.run("INSERT INTO users (sender, recipient, cart) VALUES ('1', '2', '3')");
-		 
 		  db.each("SELECT rowid AS id, sender FROM users", function(err, row) {
 			  console.log(row.id + ": " + row.sender);
 		  });
