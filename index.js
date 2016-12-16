@@ -53,8 +53,9 @@ app.post('/webhook/', function (req, res) {
 			  dataPre = row.id;
 		  });
 		  }
+		  console.log("DB ID IS : "+dataPre);
 		})
-		console.log("DB ID IS : "+dataPre);
+		
 		if (event.postback) {
 			var urlMaps  = event.postback;
 			var text = JSON.stringify(event.postback);			
