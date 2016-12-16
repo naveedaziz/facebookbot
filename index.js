@@ -47,7 +47,7 @@ app.post('/webhook/', function (req, res) {
 		var sender = event.sender.id
 		console.log(event)
 		db.serialize(function() {
-		 db.run("CREATE TABLE users (sender TEXT,recipient TEXT,cart TEXT,product_selected TEXT,store_id TEXT,dated TEXT)");
+		// db.run("CREATE TABLE users (sender TEXT,recipient TEXT,cart TEXT,product_selected TEXT,store_id TEXT,dated TEXT)");
  
 		  var stmt = db.run("INSERT INTO users (sender, recipient, cart) VALUES ('1', '2', '3')");
 		 
