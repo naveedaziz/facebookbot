@@ -46,6 +46,9 @@ app.post('/webhook/', function (req, res) {
 		var event = req.body.entry[0].messaging[i]
 		var sender = event.sender.id
 		console.log(event)
+		db.each("SELECT rowid AS id, sender FROM users", function(err, row) {
+		  console.log(row.id + ": " + row.sender);
+	  });
 		if (event.postback) {
 			var urlMaps  = event.postback;
 			var text = JSON.stringify(event.postback);			
