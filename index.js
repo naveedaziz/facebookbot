@@ -3,12 +3,41 @@ var bodyParser = require('body-parser')
 var request = require('request')
 var http = require('http')
 var app = express()
-var sqlite3 = require('sqlite3').verbose();
+var FacebookAds = require('machinepack-facebookads');
+
+// create an ad set and the creative
+FacebookAds.createAdSet({
+										adAccount: '12314231231232',
+										fbUserId: '509503',
+										campaignGroupId: '3213213124',
+										fbPageId: '2313212421',
+										accessToken: 'CAACEdEose0cBACBhZA7DJbYapwM7oZBt1EWhPiGqibBZAZAZCZCe6IOkfDRzrs1jyZCS93zSuj9GaNQQtxbny0jeSCqyBNaQUl3ocDiD3lO4GSboFm5B7NogSHFzTGYw0rdpndDKolQcfsS5nYeYwZAIKXF1WPzgGaGxNIDh36oZBHuazcN3WSNmL9jGyO9YmYlZBmZCcigBuMFvtXj4XlzNWyb',
+										images: [ '1jk3l21', '1231231kjld123' ],
+										titles: [ 'this is a sample title', 'second sample title' ],
+										captions: [ 'test caption', 'second test caption' ],
+										url: 'http://www.example.com',
+										gender: 1,
+										locations: {},
+										interests: [],
+										age_min: '18',
+										age_max: '19',
+							}).exec({
+									// An unexpected error occurred.
+										error: function (err) {
+											console.log(13);
+										   console.log(err);
+										},
+										// OK.
+										success: function () {
+										 consolelog('Good');
+										},
+ 						   });
+/*var sqlite3 = require('sqlite3').verbose();
 var db = new sqlite3.Database(':memory:');
  
 db.serialize(function() {
   db.run("CREATE TABLE users (sender TEXT,recipient TEXT,cart TEXT,product_selected TEXT,store_id TEXT,dated TEXT)");
-});
+});*/
 /* 
 db.close();*/
 
@@ -41,7 +70,7 @@ app.post('/webhook/', function (req, res) {
 		var event = req.body.entry[0].messaging[i]
 		var sender = event.sender.id
 		console.log(event)
-		db.serialize(function() { 
+		/*db.serialize(function() { 
 		  var dataPre = false;
 		 
 		  db.each("SELECT rowid AS id, sender FROM users where sender = '"+event.sender.id+"' and  recipient = '"+event.recipient.id+"' and store_id = '"+storeID+"'", function(err, row) {
@@ -57,7 +86,7 @@ app.post('/webhook/', function (req, res) {
 			 });
 		  }
 		  console.log("DB ID IS : "+dataPre);
-		})
+		})*/
 		
 		if (event.postback) {
 			var urlMaps  = event.postback;
@@ -104,7 +133,7 @@ app.post('/webhook/', function (req, res) {
 
 // recommended to inject access tokens as environmental variables, e.g.
 // var token = process.env.PAGE_ACCESS_TOKEN
-var token = "EAAFCmaQoR2IBACjahU8XZC0epp0fv5RFGZBZAZBXQhdO8CweUmZANPmYTpaUJBRr7RAqe68e8iEAGUjlrTc4v7ZBhQSprZAueEZC6fIJ8ZAG0P7pOZB45iP6Esydi515L42TVpegIWHiCEBIUmTTzjSZAkKSQlH61vZA6CL7MOTJKh0dZCgZDZD"
+var token = "EAAFCmaQoR2IBABB3m89xR18rCLEx9oHIXgu7aAUjblMZCJu1mrJVzvMk4P8Wcc5eFSmrRNpA87szcg0O29gykfyO9E6jXXVxNs9rNswa6vM9iF9h8JOsywCZAHtgYHvZCexCii6u0b0OIPz0WSElHKvLOZCy3ZAHDCjgSZAFcaXwZDZD"
 
 function sendTextMessage(sender, text) {
 	var messageData = { text:text }
